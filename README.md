@@ -1,7 +1,7 @@
 # WESAD 스트레스 조건 분류 시작 코드
 
 - 제공 범위: 데이터 로딩, 특징 계산, 참가자 분할, Logistic Regression 평가, 결과 저장
-- 학생 수행: Advanced Model 개발, 기준 모델과의 비교, RQ1~RQ4 실험·분석
+- 필수 내용: Advanced Model 개발, 기준 모델과의 비교, RQ1~RQ4 실험·분석
 
 ## 설치
 
@@ -51,7 +51,7 @@ python -m wesad_starter verify --output-dir results/baseline
 - `splits.json`, `preprocessing.csv`, `*_metadata.json`: 참가자 분할·전처리·실행 설정
 - 기준 개수: 513구간(Baseline 282 / Stress 152 / Amusement 79), 예측 2,052행, 참가자 점수 60행
 
-## 학생 수행 사항
+## 프로젝트 요구사항
 
 - Advanced Model: 개선 요소 1개 이상 구현, 기준 모델과 동일한 네 조건 비교
 - RQ1: 참가자별 융합 이득·악화와 단일 신호 오류 중복 분석
