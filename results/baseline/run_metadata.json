@@ -1,0 +1,91 @@
+{
+  "starter_version": "0.1.0",
+  "created_at_utc": "2026-11-03T09:08:46.587966+00:00",
+  "scope": "full",
+  "command": [
+    "python",
+    "-m",
+    "wesad_starter",
+    "evaluate",
+    "--features",
+    "results/baseline/features.csv",
+    "--output-dir",
+    "results/baseline"
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "packages": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "matplotlib": "3.11.2",
+      "nbformat": "5.11.1",
+      "nbclient": "0.11.0"
+    }
+  },
+  "baseline": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "max_iter": 2000,
+    "solver": "lbfgs",
+    "tol": 0.0001,
+    "random_state": 42,
+    "regularization": "L2",
+    "threshold": 0.5
+  },
+  "preprocessing": {
+    "imputation": "training median",
+    "all_missing_fill": 0,
+    "keep_empty_features": true,
+    "scaling": "training StandardScaler"
+  },
+  "features": {
+    "eda": [
+      "eda_mean",
+      "eda_std",
+      "eda_min",
+      "eda_max",
+      "eda_median",
+      "eda_iqr",
+      "eda_slope"
+    ],
+    "bvp": [
+      "bvp_mean",
+      "bvp_std",
+      "bvp_min",
+      "bvp_max",
+      "bvp_median",
+      "bvp_iqr",
+      "bvp_slope"
+    ]
+  },
+  "evaluation": {
+    "outer": "participant LOSO",
+    "macro_f1_labels": [
+      0,
+      1
+    ],
+    "zero_division": 0,
+    "summary_unit": "participant",
+    "std_ddof": 1,
+    "prediction_fusion_weights": [
+      0.5,
+      0.5
+    ]
+  },
+  "files_sha256": {
+    "predictions.csv": "e2eb8cf15053406c585685a9debc15cca6fa034a5a0be48572e5420ed9bcc7bb",
+    "participant_metrics.csv": "af388cf279e484be5c57ec30c12765039051718cf1a51e3e5b29cf5c3c8d44b5",
+    "summary.csv": "194022d8f50afa55809e7bd7534cce8d25d172d5ae607321fa0b2ed1caa21bdf",
+    "fusion_deltas.csv": "fec219f03fd7a2a3de1ba4bde8d09705bb25647e42ba45b217355a11d5c1ad11",
+    "condition_errors.csv": "8709bdba120a1f64316d7741bf25b7c712d82209b9c664e0cf7d1b665829fed9",
+    "error_overlap.csv": "f0f497028e5f379a99a1144de1c6de78f3005d74182cb16a2b0f530fcf015856",
+    "preprocessing.csv": "02462c432287a0a06a8e65cd8da56e6e7b14ee4167f0290345f22308b3af2857",
+    "features.csv": "6cfad9f0306b64b8c772d71b7e7e2eeac3b224cd0ff5d33bfdc14e713228dd0a",
+    "window_manifest.csv": "e2be9106ed1293a930bf73391fa182d81595c749fefa37b2349c8ad3705ef3bc",
+    "extraction_metadata.json": "6c0bcc3d04c52875448a2ca66f0d3751b81fccd6d9a631a42301f0d0b2af6e44",
+    "splits.json": "67b3b5d1965b08c1e4c07eaa30c51c7eb06806cf0a824c85f66d86292593e0f4"
+  }
+}

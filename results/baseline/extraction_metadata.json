@@ -1,0 +1,168 @@
+{
+  "source_type": "WESAD synchronized participant pickle",
+  "data_root": "/Users/bhyung/ResearchDatasets/WESAD",
+  "created_at_utc": "2026-11-03T09:06:04.817140+00:00",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "packages": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "matplotlib": "3.11.2",
+      "nbformat": "5.11.1",
+      "nbclient": "0.11.0"
+    }
+  },
+  "subjects": [
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "S11",
+    "S13",
+    "S14",
+    "S15",
+    "S16",
+    "S17"
+  ],
+  "scope": "full",
+  "window_seconds": 60,
+  "step_seconds": 60,
+  "grid_origin_seconds": 0,
+  "sample_rates_hz": {
+    "eda": 4,
+    "bvp": 64,
+    "labels": 700
+  },
+  "purity_rule": "all original condition samples identical, before binary mapping",
+  "label_mapping": {
+    "1": 0,
+    "2": 1,
+    "3": 0
+  },
+  "included_windows": 513,
+  "original_condition_counts": {
+    "1": 282,
+    "2": 152,
+    "3": 79
+  },
+  "feature_columns": [
+    "eda_mean",
+    "eda_std",
+    "eda_min",
+    "eda_max",
+    "eda_median",
+    "eda_iqr",
+    "eda_slope",
+    "bvp_mean",
+    "bvp_std",
+    "bvp_min",
+    "bvp_max",
+    "bvp_median",
+    "bvp_iqr",
+    "bvp_slope"
+  ],
+  "source_files": [
+    {
+      "subject": "S2",
+      "file": "S2/S2.pkl",
+      "size_bytes": 975117737,
+      "mtime_ns": 1511502216000000000
+    },
+    {
+      "subject": "S3",
+      "file": "S3/S3.pkl",
+      "size_bytes": 1031507132,
+      "mtime_ns": 1511502426000000000
+    },
+    {
+      "subject": "S4",
+      "file": "S4/S4.pkl",
+      "size_bytes": 1034344388,
+      "mtime_ns": 1511502704000000000
+    },
+    {
+      "subject": "S5",
+      "file": "S5/S5.pkl",
+      "size_bytes": 993435543,
+      "mtime_ns": 1511502852000000000
+    },
+    {
+      "subject": "S6",
+      "file": "S6/S6.pkl",
+      "size_bytes": 1123292444,
+      "mtime_ns": 1511503036000000000
+    },
+    {
+      "subject": "S7",
+      "file": "S7/S7.pkl",
+      "size_bytes": 829424437,
+      "mtime_ns": 1511503162000000000
+    },
+    {
+      "subject": "S8",
+      "file": "S8/S8.pkl",
+      "size_bytes": 869469022,
+      "mtime_ns": 1511503292000000000
+    },
+    {
+      "subject": "S9",
+      "file": "S9/S9.pkl",
+      "size_bytes": 832647582,
+      "mtime_ns": 1511503436000000000
+    },
+    {
+      "subject": "S10",
+      "file": "S10/S10.pkl",
+      "size_bytes": 867178991,
+      "mtime_ns": 1511503636000000000
+    },
+    {
+      "subject": "S11",
+      "file": "S11/S11.pkl",
+      "size_bytes": 831090213,
+      "mtime_ns": 1511504414000000000
+    },
+    {
+      "subject": "S13",
+      "file": "S13/S13.pkl",
+      "size_bytes": 885309681,
+      "mtime_ns": 1511504610000000000
+    },
+    {
+      "subject": "S14",
+      "file": "S14/S14.pkl",
+      "size_bytes": 881137147,
+      "mtime_ns": 1511504748000000000
+    },
+    {
+      "subject": "S15",
+      "file": "S15/S15.pkl",
+      "size_bytes": 827715045,
+      "mtime_ns": 1511504872000000000
+    },
+    {
+      "subject": "S16",
+      "file": "S16/S16.pkl",
+      "size_bytes": 898980304,
+      "mtime_ns": 1511505546000000000
+    },
+    {
+      "subject": "S17",
+      "file": "S17/S17.pkl",
+      "size_bytes": 946975319,
+      "mtime_ns": 1511505776000000000
+    }
+  ],
+  "files_sha256": {
+    "features.csv": "6cfad9f0306b64b8c772d71b7e7e2eeac3b224cd0ff5d33bfdc14e713228dd0a",
+    "window_manifest.csv": "e2be9106ed1293a930bf73391fa182d81595c749fefa37b2349c8ad3705ef3bc"
+  }
+}
