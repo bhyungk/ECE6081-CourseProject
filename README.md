@@ -7,7 +7,7 @@
 
 - 검증 환경: Python 3.12
 - 데이터: 별도 준비한 WESAD의 동기화 `.pkl` 파일
-- 폴더 구조: `$WESAD_ROOT/S2/S2.pkl` 등 15명(S2~S11, S13~S17)
+- 폴더 구조: `$WESAD_ROOT/S2/S2.pkl` 등 15명(S2 ~ S11, S13 ~ S17)
 
 ```bash
 python3.12 -m venv .venv
