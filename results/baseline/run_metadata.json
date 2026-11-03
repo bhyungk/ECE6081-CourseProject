@@ -1,6 +1,6 @@
 {
   "starter_version": "0.1.0",
-  "created_at_utc": "2026-11-03T09:08:46.587966+00:00",
+  "created_at_utc": "2026-11-03T11:27:37.148047+00:00",
   "scope": "full",
   "command": [
     "python",
@@ -8,9 +8,9 @@
     "wesad_starter",
     "evaluate",
     "--features",
-    "results/baseline/features.csv",
+    "$FEATURES",
     "--output-dir",
-    "results/baseline"
+    "$OUTPUT_DIR"
   ],
   "environment": {
     "python": "3.12.14",
@@ -85,7 +85,7 @@
     "preprocessing.csv": "02462c432287a0a06a8e65cd8da56e6e7b14ee4167f0290345f22308b3af2857",
     "features.csv": "6cfad9f0306b64b8c772d71b7e7e2eeac3b224cd0ff5d33bfdc14e713228dd0a",
     "window_manifest.csv": "e2be9106ed1293a930bf73391fa182d81595c749fefa37b2349c8ad3705ef3bc",
-    "extraction_metadata.json": "6c0bcc3d04c52875448a2ca66f0d3751b81fccd6d9a631a42301f0d0b2af6e44",
+    "extraction_metadata.json": "636732aa9c8c6dbd111ca5eed1a0a4a7affdba7421e1d0bc3130aea08fb24f8a",
     "splits.json": "67b3b5d1965b08c1e4c07eaa30c51c7eb06806cf0a824c85f66d86292593e0f4"
   }
 }

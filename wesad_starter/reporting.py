@@ -7,7 +7,7 @@ import importlib.metadata
 import json
 import platform
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 import numpy as np
 import pandas as pd
@@ -22,10 +22,67 @@ from .features import BVP_FEATURES, EDA_FEATURES
 
 REPORT_TABLES = ("predictions", "participant_metrics", "summary", "fusion_deltas",
                  "condition_errors", "error_overlap", "preprocessing")
+PATH_OPTIONS = {"--data-root": "$WESAD_ROOT", "--features": "$FEATURES", "--output-dir": "$OUTPUT_DIR"}
+
+
+def _absolute_path(value: str) -> bool:
+    return Path(value).is_absolute() or PureWindowsPath(value).is_absolute()
+
+
+def portable_command(command: list[str] | None) -> list[str]:
+    """Keep replayable option names without persisting local directory values."""
+    result = []
+    source = command or []
+    index = 0
+    while index < len(source):
+        token = str(source[index])
+        option, separator, value = token.partition("=")
+        if option in PATH_OPTIONS:
+            if separator:
+                result.append(f"{option}={PATH_OPTIONS[option]}")
+            else:
+                result.append(option)
+                if index + 1 < len(source) and not str(source[index + 1]).startswith("--"):
+                    result.append(PATH_OPTIONS[option])
+                    index += 1
+        elif separator and _absolute_path(value):
+            result.append(f"{option}=$PATH")
+        elif _absolute_path(token):
+            result.append("python" if index == 0 else "$PATH")
+        else:
+            result.append(token)
+        index += 1
+    return result
 
 
 def write_json(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+
+
+def sanitize_extraction_metadata(root: Path) -> bool:
+    """Remove machine-specific paths from a validated extraction record.
+
+    Input-table checksums and relative participant file references are retained.
+    Missing optional path fields are left absent, preserving portable records.
+    """
+    path = root / "extraction_metadata.json"
+    if not path.is_file():
+        return False
+    metadata = json.loads(path.read_text(encoding="utf-8"))
+    changed = False
+    if "data_root" in metadata and metadata["data_root"] != "$WESAD_ROOT":
+        metadata["data_root"] = "$WESAD_ROOT"
+        changed = True
+    for entry in metadata.get("source_files", []):
+        value = str(entry.get("file", ""))
+        if _absolute_path(value):
+            filename = PureWindowsPath(value).name
+            subject = str(entry.get("subject", ""))
+            entry["file"] = f"{subject}/{filename}" if subject else filename
+            changed = True
+    if changed:
+        write_json(path, metadata)
+    return changed
 
 
 def file_sha256(path: Path) -> str:
@@ -71,12 +128,13 @@ def save_evaluation(outputs: dict, output_dir: str | Path, *, command: list[str]
     output_dir.mkdir(parents=True, exist_ok=True)
     if (output_dir / "extraction_metadata.json").is_file():
         validate_extraction_provenance(output_dir, pd.read_csv(output_dir / "features.csv"))
+        sanitize_extraction_metadata(output_dir)
     for name in REPORT_TABLES:
         outputs[name].to_csv(output_dir / f"{name}.csv", index=False, float_format="%.17g", na_rep="")
     write_json(output_dir / "splits.json", outputs["splits"])
     metadata = {
         "starter_version": __version__, "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "scope": outputs["splits"]["scope"], "command": command or [],
+        "scope": outputs["splits"]["scope"], "command": portable_command(command),
         "environment": environment_record(),
         "baseline": BASELINE_PARAMETERS | {"regularization": "L2", "threshold": THRESHOLD},
         "preprocessing": {"imputation": "training median", "all_missing_fill": 0,

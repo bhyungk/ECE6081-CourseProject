@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import sys
 from datetime import datetime, timezone
@@ -41,7 +42,7 @@ def _extract(args: argparse.Namespace) -> Path:
     manifest.to_csv(output_dir / "window_manifest.csv", index=False, float_format="%.17g", na_rep="")
     features.to_csv(output_dir / "features.csv", index=False, float_format="%.17g", na_rep="")
     write_json(output_dir / "extraction_metadata.json", {
-        "source_type": "WESAD synchronized participant pickle", "data_root": str(root),
+        "source_type": "WESAD synchronized participant pickle", "data_root": "$WESAD_ROOT",
         "created_at_utc": datetime.now(timezone.utc).isoformat(), "environment": environment_record(),
         "subjects": subjects, "scope": "full" if set(subjects) == set(EXPECTED_SUBJECTS) else "pilot",
         "window_seconds": 60, "step_seconds": 60, "grid_origin_seconds": 0,
@@ -54,7 +55,7 @@ def _extract(args: argparse.Namespace) -> Path:
                           "mtime_ns": (root / s / f"{s}.pkl").stat().st_mtime_ns} for s in subjects],
         "files_sha256": {n: file_sha256(output_dir / n) for n in ("features.csv", "window_manifest.csv")},
     })
-    print(f"Extracted {len(features)} windows from {len(subjects)} participants -> {output_dir}")
+    print(f"Extracted {len(features)} windows from {len(subjects)} participants; results saved.")
     return output_dir / "features.csv"
 
 
@@ -84,8 +85,15 @@ def _evaluate(feature_path: Path, output_dir: Path, command: list[str]) -> None:
     print(json.dumps(verify_results(output_dir), ensure_ascii=False, indent=2))
 
 
+class _ArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        # argparse otherwise echoes invalid arguments, including personal paths.
+        self.print_usage(sys.stderr)
+        self.exit(2, "ERROR: Invalid command-line arguments; use --help for options.\n")
+
+
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description=__doc__)
+    p = _ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest="action", required=True)
     for name in ("extract", "run"):
         q = sub.add_parser(name, help="Extract features only" if name == "extract" else "Extract, evaluate, and verify")
@@ -100,6 +108,24 @@ def parser() -> argparse.ArgumentParser:
     return p
 
 
+def _safe_error_message(error: Exception, args: argparse.Namespace) -> str:
+    """Keep useful diagnostics without echoing personal command-line paths."""
+    if isinstance(error, OSError):
+        return "Cannot access a required file or directory; check the input and output options."
+    message = str(error)
+    placeholders = {"data_root": "$WESAD_ROOT", "features": "$FEATURES", "output_dir": "$OUTPUT_DIR"}
+    replacements = []
+    for field, placeholder in placeholders.items():
+        value = getattr(args, field, None)
+        if value is not None:
+            path = Path(value)
+            replacements.extend((str(candidate), placeholder) for candidate in (path, path.expanduser(), path.expanduser().resolve()))
+    for value, placeholder in sorted(replacements, key=lambda pair: len(pair[0]), reverse=True):
+        if value:
+            message = message.replace(value, placeholder)
+    return re.sub(r"(?<![A-Za-z0-9_$])(?:[A-Za-z]:[\\/]|/)[^\s'\"<>]*", "$PATH", message)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     command = ["python", "-m", "wesad_starter"] + (argv if argv is not None else sys.argv[1:])
@@ -112,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
             _evaluate(args.features, args.output_dir, command)
         else:
             print(json.dumps(verify_results(args.output_dir), ensure_ascii=False, indent=2))
-    except (ValueError, FileNotFoundError, KeyError, TypeError) as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        print(f"ERROR: {_safe_error_message(exc, args)}", file=sys.stderr)
         return 1
     return 0
